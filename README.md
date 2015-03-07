@@ -1,6 +1,26 @@
 # meta-afdc-routinely
 This is a third-party yocto layer for the Routine.ly GCS on Edison
 
+## Download the Edison Source
+1. install build system dependencies
+  - `sudo apt-get install build-essential git diffstat gawk chrpath texinfo libtool gcc-multilib`
+2. make directories for bitbake to use for source download and build state storage
+  - `mkdir bitbake_download_dir`
+  - `mkdir bitbake_sstate_dir`
+3. `wget http://downloadmirror.intel.com/24698/eng/edison-src-ww05-15.tgz`
+  - or browse to the [software download](http://www.intel.com/support/edison/sb/CS-035180.htm) page for the latest
+  - edison-src-ww05-15.tgz is latest at the time of writing
+4. unpack
+  - `tar zxvf edison-src-ww05-15.tgz`
+  - `cd edison-src`
+
+5. setup the build environment
+  - `./device-software/setup.sh --dl_dir=/home/ubuntu/bitbake_download_dir –-sstate_dir=/home/ubuntu/bitbake_sstate_dir`
+6. Configure the shell environment with the source command below. After the command executes, the directory changes to the edison-src/build folder
+  - `source poky/oe-init-build-env`
+7. Now do the initial Edison build.
+  - `bitbake edison-image`
+
 ## Installation
 
 ### Add the OpenEmbedded repo
