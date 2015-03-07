@@ -1,6 +1,8 @@
 # meta-afdc-routinely
 This is a third-party yocto layer for the Routine.ly GCS on Edison
 
+These directions are for building the flash image from scratch and for setting up a repository
+
 ## Download the Edison Source
 1. install build system dependencies
   - `sudo apt-get install build-essential git diffstat gawk chrpath texinfo libtool gcc-multilib`
@@ -15,7 +17,7 @@ This is a third-party yocto layer for the Routine.ly GCS on Edison
   - `cd edison-src`
 
 5. setup the build environment
-  - `./device-software/setup.sh --dl_dir=/home/ubuntu/bitbake_download_dir –-sstate_dir=/home/ubuntu/bitbake_sstate_dir`
+  - `./device-software/setup.sh --dl_dir=/home/ubuntu/bitbake_download_dir --sstate_dir=/home/ubuntu/bitbake_sstate_dir`
 6. Configure the shell environment with the source command below. After the command executes, the directory changes to the edison-src/build folder
   - `source poky/oe-init-build-env`
 7. Now do the initial Edison build.
@@ -38,15 +40,7 @@ file and append the path to the new layer into the BBLAYERS variable:
   ```bash
   BBLAYERS ?= " \
   [..]
-  Full/path/to/edison-src/device-software/meta-openembedded/meta-oe \ "
-  ```
-3. You now can add any recipe provided by the new meta-oe layer to your image. To add opencv to the image, add it to the IMAGE_INSTALL variable.
-You can do this in the edison-src/devicesoftware/meta-edison-distro/recipes-core/images/edison-image.bb file, for example.
-In the particular case of opencv, to avoid bringing too many dependencies, you should also redefine a specific variable so that
-the library is built without gtk support:
-  ```bash
-  IMAGE_INSTALL += "opencv"
-  PACKAGECONFIG_pn-opencv="eigen jpeg libav png tiff v4l"
+  /home/ubuntu/edison-src/device-software/meta-openembedded/meta-oe \ "
   ```
 
 ### Add the Routine.ly repo
@@ -63,24 +57,26 @@ assumes a standard image has been created by running the setup.sh script and bit
 file and append the path to the new layer into the BBLAYERS variable:
 
   ```bash
-  BBLAYERS ?=  \
+  BBLAYERS ?=  "\
   [..]
-  Full/path/to/edison-src/device-software/meta-afdc-routinely \
-  ```
-
-3. You now can add any recipe provided by the new meta-oe layer to your image. As in section 4.1, to add
-opencv to the image, add it to the IMAGE_INSTALL variable. You can do this in the edison-src/devicesoftware/meta-edison-distro/recipes-core/images/edison-image.bb
-file, for example. In the particular case of opencv, to avoid bringing too many dependencies, you should also redefine a specific variable so that the library is built without gtk support:
-
-  ```bash
-  IMAGE_INSTALL += "opencv"
-  PACKAGECONFIG_pn-opencv="eigen jpeg libav png tiff v4l"
+  /home/ubuntu/edison-src/device-software/meta-afdc-routinely \
+  "
   ```
 
 4. Save the file and rebuild the image as follows:
   cd edison-src
   source poky/oe-init-build-env
   bitbake edison-image
+
+## Flashing
+Building all the packages from scratch can take up to 5 or 6 hours, depending on your host. After the first build
+(provided you have not done any major cleanups), you can expect much faster rebuilds, depending on your host
+and the amount of changes. When the bitbake process completes, images to flash are created in the edisonsrc/build/tmp/deploy/images
+directory. To simplify the flash procedure, run the script below to copy the necessary
+files to the build/toFlash directory.
+`../device-software/utils/flash/postBuild.sh`
+The images are ready to flash on the Intel® Edison Development Board. Refer to the [GSG] for details on the
+flashing procedure.
 
 ## Notes
 - sometime bitbake will fail with an error like this:
