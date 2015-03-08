@@ -68,13 +68,20 @@ Build the image as follows:
   ```
 
 ## Flashing
-Building all the packages from scratch can take up to 5 or 6 hours, depending on your host. After the first build
-(provided you have not done any major cleanups), you can expect much faster rebuilds, depending on your host
-and the amount of changes. When the bitbake process completes, images to flash are created in the edisonsrc/build/tmp/deploy/images
-directory. To simplify the flash procedure, run the script below to copy the necessary
-files to the build/toFlash directory.
+
+Building all the packages from scratch can take up to 5 or 6 hours, depending on your host.
+
+After the first build
+(provided you have not done any major cleanups), you can expect much faster rebuilds, depending on your host and the amount of changes.
+
+When the bitbake process completes, images to flash are created in the `edisonsrc/build/tmp/deploy/images` directory.
+
+To simplify the flash procedure, run the script below to copy the necessary files to the build/toFlash directory.
+
 `../device-software/utils/flash/postBuild.sh`
-The images are ready to flash on the Intel® Edison Development Board. Refer to the [GSG] for details on the
+
+The images are ready to flash on the Intel® Edison Development Board.
+Refer to the [GSG] for details on the
 flashing procedure.
 
 ## Notes
@@ -91,5 +98,11 @@ flashing procedure.
     - other times you need to edit the recipe to add a mirror
       - use google to find one
       - i've encountered this mostly with sourceforge addresses
-- use .bbappend files to configure existing recipes
-  - eg) gpsd
+
+## TODO
+- add recipe for our git repo
+  - include services, etc
+  - do_install()
+- add kernel config modification for ftdi
+  - can just be readme instructions for enabling it via the text file for now
+- add instructions for enabling a repo from this build
