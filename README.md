@@ -85,6 +85,7 @@ Refer to the [GSG] for details on the
 flashing procedure.
 
 ## Notes
+
 - sometime bitbake will fail with an error like this:
 
   ```bash
@@ -99,6 +100,28 @@ flashing procedure.
       - use google to find one
       - i've encountered this mostly with sourceforge addresses
 
+## How to enable a kernel module from our layer
+
+If we find we need another kernel module, these are the steps to take.
+- `tar zxvf edison-src-ww05-15.tgz`
+- `cd edison-src`
+- `./device-software/setup.sh --dl_dir=/home/ubuntu/bitbake_download_dir --sstate_dir=/home/ubuntu/bitbake_sstate_dir`
+- `source poky/oe-init-build-env`
+- `bitbake linux-yocto -c kernel_configme -f`
+- `bitbake linux-yocto -c menuconfig`
+- `bitbake linux-yocto -c diffconfig`
+  - it will tell you where the generated .cfg file is at
+- in your layer
+  - `mkdir -p recipes-kernel/linux/files`
+  - copy the generated .cfg into recipes-kernel/linux/files/<module_name>.cfg
+    - `cp /home/ubuntu/edison-src/build/tmp/work/edison-poky-linux/linux-yocto/3.10.17+gitAUTOINC+6ad20f049a_c03195ed6e-r0/fragment.cfg recipes-kernel/linux/files/ftdisio.cfg`
+  - make recipes-kernel/linux/linux-yocto_3.10.bbappend
+    ```bash
+    FILESEXTRAPATHS_prepend := "${THISDIR}/files:"
+    SRC_URI += "file://ftdisio.cfg"
+    ```
+
+
 ## TODO
 - add recipe for our git repo
   - include services, etc
@@ -106,3 +129,4 @@ flashing procedure.
 - add kernel config modification for ftdi
   - can just be readme instructions for enabling it via the text file for now
 - add instructions for enabling a repo from this build
+  - [this](http://www.jumpnowtek.com/yocto/Using-your-build-workstation-as-a-remote-package-repository.html) looks like a good resource
