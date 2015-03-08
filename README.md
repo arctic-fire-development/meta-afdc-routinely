@@ -6,7 +6,7 @@ These directions are for building the flash image from scratch and for setting u
 ## Download the Edison Source
 1. install build system dependencies
   - `sudo apt-get install build-essential git diffstat gawk chrpath texinfo libtool gcc-multilib`
-2. make directories for bitbake to use for source download and build state storage
+2. create directories for bitbake to use for source download and build state storage
   - `mkdir bitbake_download_dir`
   - `mkdir bitbake_sstate_dir`
 3. `wget http://downloadmirror.intel.com/24698/eng/edison-src-ww05-15.tgz`
@@ -25,9 +25,11 @@ These directions are for building the flash image from scratch and for setting u
 
 ## Installation
 
+Intel Edison Board Support Package (BSP) [documentation](http://download.intel.com/support/edison/sb/edisonbsp_ug_331188005.pdf).
+
 ### Add the OpenEmbedded repo
-directions from the Intel Edison Board Support Package (BSP) [documentation](http://download.intel.com/support/edison/sb/edisonbsp_ug_331188005.pdf) with a few modifications, primarily using .bbappend recipes in our Routinely repo
-1. Get the OpenEmbedded Yocto layer collection from GitHub. We use the "daisy" branch matching the
+
+Get the OpenEmbedded Yocto layer collection from GitHub. We use the "daisy" branch matching the
 version of Yocto that is used by the Intel® Edison software.
   ```bash
   cd edison-src/device-software
@@ -35,38 +37,35 @@ version of Yocto that is used by the Intel® Edison software.
   cd meta-openembedded
   git checkout daisy
   ```
-2. Tell bitbake to look for recipes contained in the new meta-oe/ layer. Edit the build/conf/bblayers.conf
-file and append the path to the new layer into the BBLAYERS variable:
-  ```bash
-  BBLAYERS ?= " \
-  [..]
-  /home/ubuntu/edison-src/device-software/meta-openembedded/meta-oe \ "
-  ```
 
 ### Add the Routine.ly repo
-assumes a standard image has been created by running the setup.sh script and bitbake edison-image as described in the previous sections
-1. Get the Routine.ly Yocto layer from github
+
+Get the Routine.ly Yocto layer from github
 
   ```bash
   cd edison-src/device-software
   git clone git@github.com:arctic-fire-development/meta-afdc-routinely.git
-  cd meta-afdc-routinely
   ```
 
-2. Tell bitbake to look for recipes contained in the new meta-afdc-routinely/ layer. Edit the build/conf/bblayers.conf
-file and append the path to the new layer into the BBLAYERS variable:
+### Edit bblayers.conf
+Tell bitbake to look for recipes contained the layers we just added. Edit the file `~/edison-src/build/conf/bblayers.conf` and append the path to the new layers into the BBLAYERS variable:
 
   ```bash
   BBLAYERS ?=  "\
   [..]
+  /home/ubuntu/edison-src/device-software/meta-openembedded/meta-oe \
   /home/ubuntu/edison-src/device-software/meta-afdc-routinely \
   "
   ```
 
-4. Save the file and rebuild the image as follows:
+### Build the image
+Build the image as follows:
+
+  ```bash
   cd edison-src
   source poky/oe-init-build-env
   bitbake edison-image
+  ```
 
 ## Flashing
 Building all the packages from scratch can take up to 5 or 6 hours, depending on your host. After the first build
