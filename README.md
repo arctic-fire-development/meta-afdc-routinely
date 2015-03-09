@@ -131,15 +131,21 @@ Yocto recipes can pull from git repositories by setting the SRC_URI variable app
 Unfortunately you can't just do:
   `SRC_URI = "git@github.com:accountname/somerepository.git`
 
-You'll get errors because the Yocto won't know what kind of url this is. You need to specify the protocol for Yocto to know this is a git repository via "git://", give the appropriate option to the Yocto git.py script to use the ssh protocol, and replace the colon with a slash to prevent the user account from being used as the port number. The default TAG is master, you you can omit TAG if master is what you want.
+You'll get errors because the Yocto won't know what kind of url this is. You need to specify the protocol for Yocto to know this is a git repository via "git://", give the appropriate option to the Yocto git.py script to use the ssh protocol, and replace the colon with a slash to prevent the user account from being used as the port number.
 
-  `SRC_URI = "git://<username>@github.com/<account name>/<repository name>.git;protocol=ssh;tag=${TAG}"`
+  `SRC_URI = "git://<username>@github.com/<account name>/<repository name>.git;protocol=ssh"`
 
-so for Routine.ly master tag we use
+so for Routine.ly
   `SRC_URI = "git://git@github.com/arctic-fire-development/routinely.git;protocol=ssh"`
 
-if you want a specific tag, use:
-  `SRC_URI = "git://git@github.com/arctic-fire-development/routinely.git;protocol=ssh;tag=${TAG}"`
+if you want a specific branch, use:
+  `SRC_URI = "git://git@github.com/arctic-fire-development/routinely.git;protocol=ssh;branch=development"`
+
+other examples for refinining the SRC_URI
+
+;tag=3.2.1
+;protocol=git
+;rev=6f48d47ee20475766a27b5465c192fdff7ba8cc8
 
 ## TODO
 - add recipe for our git repo
@@ -147,3 +153,4 @@ if you want a specific tag, use:
   - do_install()
 - add instructions for enabling a repo from this build
   - [this](http://www.jumpnowtek.com/yocto/Using-your-build-workstation-as-a-remote-package-repository.html) looks like a good resource
+- add mapproxy recipe
