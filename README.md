@@ -94,11 +94,11 @@ flashing procedure.
   Summary: There were 4 WARNING messages shown.
   Summary: There were 2 ERROR messages shown, returning a non-zero exit code.
   ```
+- sometimes you can "fix" this by just re-running bitbake
+- other times you need to edit the recipe to add a mirror
+  - use google to find one
+  - i've encountered this mostly with sourceforge addresses
 
-    - sometimes you can "fix" this by just re-running bitbake
-    - other times you need to edit the recipe to add a mirror
-      - use google to find one
-      - i've encountered this mostly with sourceforge addresses
 
 ## How to enable a kernel module from our layer
 
@@ -115,18 +115,35 @@ If we find we need another kernel module, these are the steps to take.
   - `mkdir -p recipes-kernel/linux/files`
   - copy the generated .cfg into recipes-kernel/linux/files/<module_name>.cfg
     - `cp /home/ubuntu/edison-src/build/tmp/work/edison-poky-linux/linux-yocto/3.10.17+gitAUTOINC+6ad20f049a_c03195ed6e-r0/fragment.cfg recipes-kernel/linux/files/ftdisio.cfg`
-  - make recipes-kernel/linux/linux-yocto_3.10.bbappend
+  - make `recipes-kernel/linux/linux-yocto_3.10.bbappend`
     ```bash
     FILESEXTRAPATHS_prepend := "${THISDIR}/files:"
     SRC_URI += "file://ftdisio.cfg"
     ```
 
+## How to use a git repo for a URI Source
+
+A BitBucket / GitHub git url, in ssh form, looks like:
+  `<username>@github.com:<account name>/<repository name>.git`
+
+Yocto recipes can pull from git repositories by setting the SRC_URI variable appropriately.
+
+Unfortunately you can't just do:
+  `SRC_URI = "git@github.com:accountname/somerepository.git`
+
+You'll get errors because the Yocto won't know what kind of url this is. You need to specify the protocol for Yocto to know this is a git repository via "git://", give the appropriate option to the Yocto git.py script to use the ssh protocol, and replace the colon with a slash to prevent the user account from being used as the port number. The default TAG is master, you you can omit TAG if master is what you want.
+
+  `SRC_URI = "git://<username>@github.com/<account name>/<repository name>.git;protocol=ssh;tag=${TAG}"`
+
+so for Routine.ly master tag we use
+  `SRC_URI = "git://git@github.com/arctic-fire-development/routinely.git;protocol=ssh"`
+
+if you want a specific tag, use:
+  `SRC_URI = "git://git@github.com/arctic-fire-development/routinely.git;protocol=ssh;tag=${TAG}"`
 
 ## TODO
 - add recipe for our git repo
   - include services, etc
   - do_install()
-- add kernel config modification for ftdi
-  - can just be readme instructions for enabling it via the text file for now
 - add instructions for enabling a repo from this build
   - [this](http://www.jumpnowtek.com/yocto/Using-your-build-workstation-as-a-remote-package-repository.html) looks like a good resource
