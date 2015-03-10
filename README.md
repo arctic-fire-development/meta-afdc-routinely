@@ -131,20 +131,19 @@ Yocto recipes can pull from git repositories by setting the SRC_URI variable app
 Unfortunately you can't just do:
   `SRC_URI = "git@github.com:accountname/somerepository.git`
 
-You'll get errors because the Yocto won't know what kind of url this is. You need to specify the protocol for Yocto to know this is a git repository via "git://", give the appropriate option to the Yocto git.py script to use the ssh protocol, and replace the colon with a slash to prevent the user account from being used as the port number.
+You'll get errors because the Yocto won't know what kind of url this is. You need to specify the protocol for Yocto to know this is a git repository via "git://" and replace the colon with a slash to prevent the user account from being used as the port number.
 
-  `SRC_URI = "git://<username>@github.com/<account name>/<repository name>.git;protocol=ssh"`
+  `SRC_URI = "git://<username>@github.com/<account name>/<repository name>.git"`
 
 so for Routine.ly
-  `SRC_URI = "git://git@github.com/arctic-fire-development/routinely.git;protocol=ssh"`
+  `SRC_URI = "git://git@github.com/arctic-fire-development/routinely.git"`
 
 if you want a specific branch, use:
-  `SRC_URI = "git://git@github.com/arctic-fire-development/routinely.git;protocol=ssh;branch=development"`
+  `SRC_URI = "git://git@github.com/arctic-fire-development/routinely.git;branch=development"`
 
 other examples for refinining the SRC_URI
 
 ;tag=3.2.1
-;protocol=git
 ;rev=6f48d47ee20475766a27b5465c192fdff7ba8cc8
 
 ## TODO
@@ -154,3 +153,4 @@ other examples for refinining the SRC_URI
 - add instructions for enabling a repo from this build
   - [this](http://www.jumpnowtek.com/yocto/Using-your-build-workstation-as-a-remote-package-repository.html) looks like a good resource
 - add mapproxy recipe
+- add [bitbake-npm layer](https://github.com/imyller/bitbake-npm/tree/angstrom-v2014.06-yocto1.6) so we can globally install forever, bower, and grunt to the system
