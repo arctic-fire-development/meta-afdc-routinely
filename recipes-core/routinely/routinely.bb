@@ -3,7 +3,8 @@ HOMEPAGE = "http://routine.ly"
 LICENSE = "LGPLv2.1"
 LIC_FILES_CHKSUM = "file://${WORKDIR}/git/LICENSE;md5=4b54a1fd55a448865a0b32d41598759d"
 
-DEPENDS = "nodejs-native"
+#DEPENDS = "nodejs-native"
+RDEPENDS_${PN} += "nodejs"
 
 SRC_URI = "git://github.com/arctic-fire-development/dapper-gcs.git;branch=paths"
 

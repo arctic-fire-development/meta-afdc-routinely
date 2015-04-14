@@ -59,6 +59,15 @@ Get the Routine.ly Yocto layer from github
   git clone git@github.com:arctic-fire-development/meta-afdc-routinely.git
   ```
 
+### Add the nodejs layer
+
+Get the nodejs Yocto layer from github
+
+  ```bash
+  cd edison-src/device-software
+  git clone git@github.com:imyller/meta-nodejs.git
+  ```
+
 ### Edit bblayers.conf
 Tell bitbake to look for recipes contained the layers we just added. Edit the file `~/edison-src/build/conf/bblayers.conf` and append the path to the new layers into the BBLAYERS variable:
 
@@ -67,6 +76,7 @@ Tell bitbake to look for recipes contained the layers we just added. Edit the fi
   [..]
   /home/ubuntu/edison-src/device-software/meta-openembedded/meta-oe \
   /home/ubuntu/edison-src/device-software/meta-afdc-routinely \
+  /home/ubuntu/edison-src/device-software/meta-nodejs \
   "
   ```
 
